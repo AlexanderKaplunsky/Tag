@@ -13,17 +13,6 @@ class HandleConfigure extends Component {
       tagsArray: []
     };
   }
-  //   handleConfigure = e => {
-  //     let name = this.state.currentTag;
-  //     let tagsArray = this.state.tagsArray;
-  //     tagsArray.map(item => {
-  //       if (name == item.name) {
-  //         item.isDisabled = 0;
-  //         this.setState(tagsArray);
-  //       }
-  //       return tagsArray;
-  //     });
-  //   };
   handleChangeName = () => {
     let name = this.props.currentTag;
     let tagsArray = this.props.tagsArray;
