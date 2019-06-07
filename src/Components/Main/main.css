@@ -30,6 +30,7 @@
 .tagged-names p {
   font-size: 10px;
   line-height: 20px;
+  margin: 0;
 }
 
 .delete-tag {
@@ -59,11 +60,17 @@
   border-top: 1px solid;
   border-bottom: 1px solid;
   border-color: black;
+  background-color: #8ba6e472;
 }
-.tag-sugg-item p:first-child {
+.tag-sugg-item .middle p:first-child {
   font-size: 16px;
   margin: 2px 0;
 }
-.tag-sugg-item p:last-child {
+.middle p:last-child {
   font-size: 12px;
+}
+.tag-sugg-item .first p {
+  text-align: center;
+  font-size: 10px;
+  margin: 0;
 }

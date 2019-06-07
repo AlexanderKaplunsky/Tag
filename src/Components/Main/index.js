@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 
+import HandleConfigure from "../HandleConfigure/";
+
 import "./main.css";
 
 export default class Main extends Component {
@@ -8,6 +10,7 @@ export default class Main extends Component {
     this.state = {
       currentValue: "",
       taggetNames: [],
+      currentTag: "",
       namesArray: [],
       filtredArray: [],
       tagsArray: [
@@ -53,7 +56,8 @@ export default class Main extends Component {
           isDisabled: 0,
           color: "beige"
         }
-      ]
+      ],
+      categArray: []
     };
   }
   handleInput = e => {
@@ -70,7 +74,6 @@ export default class Main extends Component {
       namesArray =>
         namesArray.toLowerCase().indexOf(currentValue.toLowerCase()) > -1
     );
-    console.log("Namesarray", filtredArray);
     this.setState({
       currentValue,
       filtredArray
@@ -78,7 +81,11 @@ export default class Main extends Component {
   };
   handleAddTag = e => {
     const taggedList = this.state.taggetNames;
-    taggedList.push(e.target.innerText);
+    this.state.tagsArray.filter(item => {
+      if (item.name == e.target.innerText) {
+        taggedList.push(item);
+      }
+    });
     this.setState({
       taggetNames: taggedList,
       currentValue: ""
@@ -88,7 +95,14 @@ export default class Main extends Component {
     if (e.target.value !== "" && e.target.value !== " ") {
       if (e.key === "Enter") {
         const taggedList = this.state.taggetNames;
-        taggedList.push(e.target.value);
+        const newObj = {
+          name: e.target.value,
+          description: "your tag",
+          category: "Other",
+          isDisabled: 0,
+          color: "orange"
+        };
+        taggedList.push(newObj);
         this.setState({
           taggetNames: taggedList,
           currentValue: ""
@@ -101,18 +115,18 @@ export default class Main extends Component {
     currentArray.forEach((element, key) => {
       if (key == e.target.id) {
         currentArray.splice(key, 1);
-        console.log(currentArray);
         this.setState({
           taggetNames: currentArray
         });
       }
     });
   };
+  updateData = value => {
+    this.setState({ taggetNames: value });
+  };
   render() {
     const state = this.state;
-    console.log(state.filtredArray);
-    console.log(state.taggetNames);
-
+    console.log(state.categArray);
     return (
       <div className="main-component-wrapper">
         <header className="header">
@@ -128,9 +142,28 @@ export default class Main extends Component {
         />
         <div className="tagged-names-wrapper">
           {state.taggetNames.map((item, key) => {
+            let currentName = item.name;
             return (
-              <div key={key} className="tagged-names">
-                <p> {item} </p>
+              <div
+                key={key}
+                className="tagged-names"
+                style={{
+                  backgroundColor: item.color,
+                  opacity: item.isDisabled ? "0.2" : "1"
+                }}
+              >
+                <div>
+                  <p>Name:{item.name} </p>
+                  <p>Category:{item.category}</p>
+                  <p>Description:{item.description}</p>
+                  <button
+                    id={key}
+                    name={currentName}
+                    onClick={e => this.setState({ currentTag: e.target.id })}
+                  >
+                    edit tag
+                  </button>
+                </div>
                 <div
                   id={key}
                   className="delete-tag"
@@ -146,33 +179,42 @@ export default class Main extends Component {
         <div className="tag-sugg-wrapper">
           {state.tagsArray.map((item, key) => {
             let name = item;
+            let currentName = item.name;
             for (let i = 0; i <= state.filtredArray.length; i++) {
               if (
                 name.name == state.filtredArray[i] &&
                 state.currentValue !== ""
               ) {
                 return (
-                  <div
-                    id={key}
-                    style={{ backgroundColor: name.color }}
-                    className="tag-sugg-item"
-                  >
-                    <p onClick={e => this.handleAddTag(e)}>{name.name}</p>
-                    <p>description: {name.description}</p>
+                  <div id={key} className="tag-sugg-item">
+                    <div
+                      className="first"
+                      style={{ backgroundColor: name.color }}
+                    >
+                      <p>{name.category}</p>
+                    </div>
+                    <div className="middle">
+                      <p onClick={e => this.handleAddTag(e)}>{name.name}</p>
+                      <p>description: {name.description}</p>
+                    </div>
+                    <div
+                      className="last"
+                      style={
+                        name.isDisabled ? { backgroundColor: "black" } : null
+                      }
+                    />
                   </div>
                 );
               }
             }
           })}
         </div>
+        <HandleConfigure
+          tagsArray={state.taggetNames}
+          currentTag={state.currentTag}
+          updateData={this.updateData}
+        />
       </div>
     );
   }
 }
-
-// <div
-//   className="sugg-element"
-//   style={{ backgroundColor: item.color }}
-// >
-//   <p>{item.name}</p>
-// </div>
